@@ -256,7 +256,7 @@ class _WoundAssessmentScreenState extends State<WoundAssessmentScreen> {
   }
 
   Widget _buildProgressIndicator() {
-    final totalPages = 7;
+    const totalPages = 7;
     return Container(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -739,7 +739,7 @@ class _WoundAssessmentScreenState extends State<WoundAssessmentScreen> {
                 _assessment = _assessment?.copyWith(exudateQuantity: value);
               });
             },
-            value: _assessment?.exudateQuantity,
+            initialValue: _assessment?.exudateQuantity,
           ),
           const SizedBox(height: 16),
           DropdownButtonFormField<String>(
@@ -754,7 +754,7 @@ class _WoundAssessmentScreenState extends State<WoundAssessmentScreen> {
                 _assessment = _assessment?.copyWith(exudateType: value);
               });
             },
-            value: _assessment?.exudateType,
+            initialValue: _assessment?.exudateType,
           ),
           const SizedBox(height: 16),
           DropdownButtonFormField<String>(
@@ -769,7 +769,7 @@ class _WoundAssessmentScreenState extends State<WoundAssessmentScreen> {
                 _assessment = _assessment?.copyWith(exudateConsistency: value);
               });
             },
-            value: _assessment?.exudateConsistency,
+            initialValue: _assessment?.exudateConsistency,
           ),
           const SizedBox(height: 24),
           const Text(
@@ -789,7 +789,7 @@ class _WoundAssessmentScreenState extends State<WoundAssessmentScreen> {
                 _assessment = _assessment?.copyWith(perilesionalSkinMoisture: value);
               });
             },
-            value: _assessment?.perilesionalSkinMoisture,
+            initialValue: _assessment?.perilesionalSkinMoisture,
           ),
           const SizedBox(height: 16),
           DropdownButtonFormField<String>(
@@ -804,7 +804,7 @@ class _WoundAssessmentScreenState extends State<WoundAssessmentScreen> {
                 _assessment = _assessment?.copyWith(skinAlterationExtent: value);
               });
             },
-            value: _assessment?.skinAlterationExtent,
+            initialValue: _assessment?.skinAlterationExtent,
           ),
           const SizedBox(height: 16),
           DropdownButtonFormField<String>(
@@ -830,7 +830,7 @@ class _WoundAssessmentScreenState extends State<WoundAssessmentScreen> {
                 _assessment = _assessment?.copyWith(skinCondition: value);
               });
             },
-            value: _assessment?.skinCondition,
+            initialValue: _assessment?.skinCondition,
           ),
         ],
       ),
@@ -860,7 +860,7 @@ class _WoundAssessmentScreenState extends State<WoundAssessmentScreen> {
                 _assessment = _assessment?.copyWith(edgeCharacteristics: value);
               });
             },
-            value: _assessment?.edgeCharacteristics,
+            initialValue: _assessment?.edgeCharacteristics,
           ),
           const SizedBox(height: 16),
           DropdownButtonFormField<String>(
@@ -875,7 +875,7 @@ class _WoundAssessmentScreenState extends State<WoundAssessmentScreen> {
                 _assessment = _assessment?.copyWith(edgeAttachment: value);
               });
             },
-            value: _assessment?.edgeAttachment,
+            initialValue: _assessment?.edgeAttachment,
           ),
           const SizedBox(height: 16),
           SwitchListTile(
@@ -900,7 +900,7 @@ class _WoundAssessmentScreenState extends State<WoundAssessmentScreen> {
                 _assessment = _assessment?.copyWith(healingVelocity: value);
               });
             },
-            value: _assessment?.healingVelocity,
+            initialValue: _assessment?.healingVelocity,
           ),
           const SizedBox(height: 24),
           SwitchListTile(
@@ -1071,7 +1071,7 @@ class _WoundAssessmentScreenState extends State<WoundAssessmentScreen> {
                 _assessment = _assessment?.copyWith(activityLevel: value);
               });
             },
-            value: _assessment?.activityLevel,
+            initialValue: _assessment?.activityLevel,
           ),
           const SizedBox(height: 16),
           DropdownButtonFormField<String>(
@@ -1086,7 +1086,7 @@ class _WoundAssessmentScreenState extends State<WoundAssessmentScreen> {
                 _assessment = _assessment?.copyWith(understandingAdherence: value);
               });
             },
-            value: _assessment?.understandingAdherence,
+            initialValue: _assessment?.understandingAdherence,
           ),
           const SizedBox(height: 16),
           TextFormField(

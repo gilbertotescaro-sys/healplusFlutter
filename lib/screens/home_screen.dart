@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Card(
       child: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
+          gradient: const LinearGradient(
             colors: [AppTheme.primaryBlue, AppTheme.darkBlue],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,

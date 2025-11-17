@@ -14,29 +14,29 @@ class _BodyMapWidgetState extends State<BodyMapWidget> {
   String? _selectedLocation;
 
   final List<BodyPart> _bodyParts = [
-    BodyPart(name: 'Cabeça', position: Offset(0.5, 0.1), size: Size(0.15, 0.12)),
-    BodyPart(name: 'Pescoço', position: Offset(0.5, 0.22), size: Size(0.1, 0.05)),
-    BodyPart(name: 'Ombro Esquerdo', position: Offset(0.25, 0.27), size: Size(0.12, 0.08)),
-    BodyPart(name: 'Ombro Direito', position: Offset(0.75, 0.27), size: Size(0.12, 0.08)),
-    BodyPart(name: 'Tórax', position: Offset(0.5, 0.4), size: Size(0.3, 0.2)),
-    BodyPart(name: 'Abdômen', position: Offset(0.5, 0.6), size: Size(0.3, 0.15)),
-    BodyPart(name: 'Braço Esquerdo', position: Offset(0.15, 0.35), size: Size(0.08, 0.25)),
-    BodyPart(name: 'Braço Direito', position: Offset(0.85, 0.35), size: Size(0.08, 0.25)),
-    BodyPart(name: 'Antebraço Esquerdo', position: Offset(0.15, 0.6), size: Size(0.08, 0.2)),
-    BodyPart(name: 'Antebraço Direito', position: Offset(0.85, 0.6), size: Size(0.08, 0.2)),
-    BodyPart(name: 'Mão Esquerda', position: Offset(0.15, 0.8), size: Size(0.08, 0.1)),
-    BodyPart(name: 'Mão Direita', position: Offset(0.85, 0.8), size: Size(0.08, 0.1)),
-    BodyPart(name: 'Coxa Esquerda', position: Offset(0.4, 0.75), size: Size(0.12, 0.2)),
-    BodyPart(name: 'Coxa Direita', position: Offset(0.6, 0.75), size: Size(0.12, 0.2)),
-    BodyPart(name: 'Joelho Esquerdo', position: Offset(0.4, 0.95), size: Size(0.12, 0.08)),
-    BodyPart(name: 'Joelho Direito', position: Offset(0.6, 0.95), size: Size(0.12, 0.08)),
-    BodyPart(name: 'Perna Esquerda', position: Offset(0.4, 1.03), size: Size(0.12, 0.2)),
-    BodyPart(name: 'Perna Direita', position: Offset(0.6, 1.03), size: Size(0.12, 0.2)),
-    BodyPart(name: 'Pé Esquerdo', position: Offset(0.4, 1.23), size: Size(0.12, 0.08)),
-    BodyPart(name: 'Pé Direito', position: Offset(0.6, 1.23), size: Size(0.12, 0.08)),
-    BodyPart(name: 'Costas - Superior', position: Offset(0.5, 0.35), size: Size(0.3, 0.15)),
-    BodyPart(name: 'Costas - Inferior', position: Offset(0.5, 0.5), size: Size(0.3, 0.15)),
-    BodyPart(name: 'Glúteos', position: Offset(0.5, 0.7), size: Size(0.2, 0.1)),
+    BodyPart(name: 'Cabeça', position: const Offset(0.5, 0.1), size: const Size(0.15, 0.12)),
+    BodyPart(name: 'Pescoço', position: const Offset(0.5, 0.22), size: const Size(0.1, 0.05)),
+    BodyPart(name: 'Ombro Esquerdo', position: const Offset(0.25, 0.27), size: const Size(0.12, 0.08)),
+    BodyPart(name: 'Ombro Direito', position: const Offset(0.75, 0.27), size: const Size(0.12, 0.08)),
+    BodyPart(name: 'Tórax', position: const Offset(0.5, 0.4), size: const Size(0.3, 0.2)),
+    BodyPart(name: 'Abdômen', position: const Offset(0.5, 0.6), size: const Size(0.3, 0.15)),
+    BodyPart(name: 'Braço Esquerdo', position: const Offset(0.15, 0.35), size: const Size(0.08, 0.25)),
+    BodyPart(name: 'Braço Direito', position: const Offset(0.85, 0.35), size: const Size(0.08, 0.25)),
+    BodyPart(name: 'Antebraço Esquerdo', position: const Offset(0.15, 0.6), size: const Size(0.08, 0.2)),
+    BodyPart(name: 'Antebraço Direito', position: const Offset(0.85, 0.6), size: const Size(0.08, 0.2)),
+    BodyPart(name: 'Mão Esquerda', position: const Offset(0.15, 0.8), size: const Size(0.08, 0.1)),
+    BodyPart(name: 'Mão Direita', position: const Offset(0.85, 0.8), size: const Size(0.08, 0.1)),
+    BodyPart(name: 'Coxa Esquerda', position: const Offset(0.4, 0.75), size: const Size(0.12, 0.2)),
+    BodyPart(name: 'Coxa Direita', position: const Offset(0.6, 0.75), size: const Size(0.12, 0.2)),
+    BodyPart(name: 'Joelho Esquerdo', position: const Offset(0.4, 0.95), size: const Size(0.12, 0.08)),
+    BodyPart(name: 'Joelho Direito', position: const Offset(0.6, 0.95), size: const Size(0.12, 0.08)),
+    BodyPart(name: 'Perna Esquerda', position: const Offset(0.4, 1.03), size: const Size(0.12, 0.2)),
+    BodyPart(name: 'Perna Direita', position: const Offset(0.6, 1.03), size: const Size(0.12, 0.2)),
+    BodyPart(name: 'Pé Esquerdo', position: const Offset(0.4, 1.23), size: const Size(0.12, 0.08)),
+    BodyPart(name: 'Pé Direito', position: const Offset(0.6, 1.23), size: const Size(0.12, 0.08)),
+    BodyPart(name: 'Costas - Superior', position: const Offset(0.5, 0.35), size: const Size(0.3, 0.15)),
+    BodyPart(name: 'Costas - Inferior', position: const Offset(0.5, 0.5), size: const Size(0.3, 0.15)),
+    BodyPart(name: 'Glúteos', position: const Offset(0.5, 0.7), size: const Size(0.2, 0.1)),
   ];
 
   @override
@@ -58,7 +58,7 @@ class _BodyMapWidgetState extends State<BodyMapWidget> {
             LayoutBuilder(
               builder: (context, constraints) {
                 final width = constraints.maxWidth;
-                final height = 400.0;
+                const height = 400.0;
                 return Container(
                   height: height,
                   decoration: BoxDecoration(
@@ -89,11 +89,11 @@ class _BodyMapWidgetState extends State<BodyMapWidget> {
                 ),
                 child: Row(
                   children: [
-                    Icon(Icons.location_on, color: AppTheme.primaryBlue),
+                    const Icon(Icons.location_on, color: AppTheme.primaryBlue),
                     const SizedBox(width: 8),
                     Text(
                       'Localização selecionada: $_selectedLocation',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontWeight: FontWeight.w600,
                         color: AppTheme.primaryBlue,
                       ),
@@ -132,7 +132,7 @@ class _BodyMapWidgetState extends State<BodyMapWidget> {
             borderRadius: BorderRadius.circular(4),
           ),
           child: isSelected
-              ? Center(
+              ? const Center(
                   child: Icon(
                     Icons.check_circle,
                     color: AppTheme.primaryBlue,

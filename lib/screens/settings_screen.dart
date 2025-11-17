@@ -298,7 +298,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               decoration: const InputDecoration(
                 labelText: 'Idioma',
               ),
-              value: _selectedLanguage,
+              initialValue: _selectedLanguage,
               items: ['Português (Brasil)', 'English', 'Español']
                   .map((lang) => DropdownMenuItem(value: lang, child: Text(lang)))
                   .toList(),
@@ -313,7 +313,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               decoration: const InputDecoration(
                 labelText: 'Tamanho da Fonte',
               ),
-              value: _fontSize,
+              initialValue: _fontSize,
               items: ['Pequeno (90%)', 'Médio (100%)', 'Grande (110%)', 'Muito Grande (120%)']
                   .map((size) => DropdownMenuItem(value: size, child: Text(size)))
                   .toList(),
