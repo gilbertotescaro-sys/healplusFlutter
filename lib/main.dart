@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:go_router/go_router.dart';
 import 'database/database_helper.dart';
 import 'screens/welcome_screen.dart';
@@ -13,13 +14,21 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
   // Inicializar banco de dados
-  await DatabaseHelper.instance.database;
+  // O sqflite_common_ffi_web será usado automaticamente na web
+  try {
+    await DatabaseHelper.instance.database;
+  } catch (e) {
+    debugPrint('Erro ao inicializar banco de dados: $e');
+    // Continuar mesmo se houver erro - pode ser problema de inicialização na web
+  }
   
-  // Configurar orientação preferencial
-  await SystemChrome.setPreferredOrientations([
-    DeviceOrientation.portraitUp,
-    DeviceOrientation.portraitDown,
-  ]);
+  // Configurar orientação preferencial (apenas mobile)
+  if (!kIsWeb) {
+    await SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+  }
   
   runApp(const HealPlusApp());
 }
