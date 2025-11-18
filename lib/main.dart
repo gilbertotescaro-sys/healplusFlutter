@@ -2,24 +2,32 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:go_router/go_router.dart';
+import 'package:sqflite_common_ffi_web/sqflite_ffi_web.dart';
+import 'package:sqflite/sqflite.dart';
 import 'database/database_helper.dart';
 import 'screens/welcome_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/wound_assessment_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/wound_list_screen.dart';
+import 'screens/analysis_screen.dart';
+import 'screens/reports_screen.dart';
 import 'theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
+  // Configurar sqflite para web
+  if (kIsWeb) {
+    databaseFactory = databaseFactoryFfiWeb;
+  }
+  
   // Inicializar banco de dados
-  // O sqflite_common_ffi_web será usado automaticamente na web
   try {
     await DatabaseHelper.instance.database;
   } catch (e) {
     debugPrint('Erro ao inicializar banco de dados: $e');
-    // Continuar mesmo se houver erro - pode ser problema de inicialização na web
+    // Continuar mesmo se houver erro
   }
   
   // Configurar orientação preferencial (apenas mobile)
@@ -62,6 +70,14 @@ final GoRouter _router = GoRouter(
     GoRoute(
       path: '/settings',
       builder: (context, state) => const SettingsScreen(),
+    ),
+    GoRoute(
+      path: '/analysis',
+      builder: (context, state) => const AnalysisScreen(),
+    ),
+    GoRoute(
+      path: '/reports',
+      builder: (context, state) => const ReportsScreen(),
     ),
   ],
 );

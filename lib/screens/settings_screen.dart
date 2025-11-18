@@ -1,6 +1,8 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:go_router/go_router.dart';
 import '../theme/app_theme.dart';
 import '../database/database_helper.dart';
 import '../models/user_profile.dart';
@@ -40,35 +42,65 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   Future<void> _loadProfile() async {
     setState(() => _isLoading = true);
-    final profile = await DatabaseHelper.instance.getUserProfile();
-    
-    if (profile != null) {
-      setState(() {
-        _profile = profile;
-        _nameController.text = profile.name;
-        _emailController.text = profile.email;
-        _specialtyController.text = profile.specialty ?? '';
-        _crmCorenController.text = profile.crmCoren ?? '';
-        _profileImagePath = profile.profileImagePath;
-      });
-    } else {
-      // Criar perfil padrão
+
+    try {
+      // Usar sempre DatabaseHelper (persistência local SQLite)
+      final profile = await DatabaseHelper.instance.getUserProfile();
+      if (profile != null) {
+        setState(() {
+          _profile = profile;
+          _nameController.text = profile.name;
+          _emailController.text = profile.email;
+          _specialtyController.text = profile.specialty ?? '';
+          _crmCorenController.text = profile.crmCoren ?? '';
+          _profileImagePath = profile.profileImagePath;
+        });
+      } else {
+        // Criar perfil padrão e salvar no DB local
+        _profile = UserProfile(
+          name: 'Pedro Tescaro',
+          email: 'pedroatescaro@gmail.com',
+          specialty: 'Especialista em Feridas',
+          crmCoren: '123456-SP',
+        );
+        await DatabaseHelper.instance.insertUserProfile(_profile!);
+        // Recarregar para obter o id atribuído pelo DB
+        final saved = await DatabaseHelper.instance.getUserProfile();
+        if (saved != null) {
+          setState(() {
+            _profile = saved;
+            _nameController.text = _profile!.name;
+            _emailController.text = _profile!.email;
+            _specialtyController.text = _profile!.specialty ?? '';
+            _crmCorenController.text = _profile!.crmCoren ?? '';
+            _profileImagePath = _profile!.profileImagePath;
+          });
+        } else {
+          setState(() {
+            _nameController.text = _profile!.name;
+            _emailController.text = _profile!.email;
+            _specialtyController.text = _profile!.specialty ?? '';
+            _crmCorenController.text = _profile!.crmCoren ?? '';
+          });
+        }
+      }
+    } catch (e) {
+      // Se algo falhar (ex: banco não disponível no web), criar perfil padrão localmente
       _profile = UserProfile(
         name: 'Pedro Tescaro',
         email: 'pedroatescaro@gmail.com',
         specialty: 'Especialista em Feridas',
         crmCoren: '123456-SP',
       );
-      await DatabaseHelper.instance.insertUserProfile(_profile!);
       setState(() {
         _nameController.text = _profile!.name;
         _emailController.text = _profile!.email;
         _specialtyController.text = _profile!.specialty ?? '';
         _crmCorenController.text = _profile!.crmCoren ?? '';
       });
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
     }
-    
-    setState(() => _isLoading = false);
   }
 
   Future<void> _loadPreferences() async {
@@ -77,18 +109,59 @@ class _SettingsScreenState extends State<SettingsScreen> {
   }
 
   Future<void> _pickImage() async {
-    try {
-      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-      if (image != null) {
-        setState(() {
-          _profileImagePath = image.path;
-        });
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Erro ao selecionar imagem: $e')),
-      );
-    }
+    showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return SafeArea(
+          child: Wrap(
+            children: [
+              ListTile(
+                leading: const Icon(Icons.camera_alt),
+                title: const Text('Tirar foto'),
+                onTap: () async {
+                  Navigator.pop(context);
+                  try {
+                    final XFile? image = await _picker.pickImage(source: ImageSource.camera);
+                    if (image != null) {
+                      setState(() {
+                        _profileImagePath = image.path;
+                      });
+                    }
+                  } catch (e) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Erro ao tirar foto: $e')),
+                      );
+                    }
+                  }
+                },
+              ),
+              ListTile(
+                leading: const Icon(Icons.image),
+                title: const Text('Escolher da galeria'),
+                onTap: () async {
+                  Navigator.pop(context);
+                  try {
+                    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+                    if (image != null) {
+                      setState(() {
+                        _profileImagePath = image.path;
+                      });
+                    }
+                  } catch (e) {
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Erro ao selecionar imagem: $e')),
+                      );
+                    }
+                  }
+                },
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 
   Future<void> _saveProfile() async {
@@ -110,11 +183,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
     );
 
     try {
-      await DatabaseHelper.instance.updateUserProfile(updatedProfile);
-      setState(() {
-        _profile = updatedProfile;
-        _isSaving = false;
-      });
+      // Salvar no banco local sempre (SQLite)
+      if (updatedProfile.id != null) {
+        await DatabaseHelper.instance.updateUserProfile(updatedProfile);
+        setState(() {
+          _profile = updatedProfile;
+          _isSaving = false;
+        });
+      } else {
+        await DatabaseHelper.instance.insertUserProfile(updatedProfile);
+        final saved = await DatabaseHelper.instance.getUserProfile();
+        if (saved != null) {
+          setState(() {
+            _profile = saved;
+            _isSaving = false;
+            _profileImagePath = _profile!.profileImagePath;
+          });
+        } else {
+          setState(() {
+            _profile = updatedProfile;
+            _isSaving = false;
+          });
+        }
+      }
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Perfil salvo com sucesso!')),
@@ -150,6 +242,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Configurações'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.go('/home'),
+          tooltip: 'Voltar',
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -191,7 +288,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   CircleAvatar(
                     radius: 50,
                     backgroundColor: AppTheme.primaryBlue.withOpacity(0.1),
-                    backgroundImage: _profileImagePath != null
+                    backgroundImage: _profileImagePath != null && !kIsWeb
                         ? FileImage(File(_profileImagePath!))
                         : null,
                     child: _profileImagePath == null
@@ -200,7 +297,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             size: 50,
                             color: AppTheme.primaryBlue,
                           )
-                        : null,
+                        : (kIsWeb
+                            ? const Icon(
+                                Icons.person,
+                                size: 50,
+                                color: AppTheme.primaryBlue,
+                              )
+                            : null),
                   ),
                   Positioned(
                     bottom: 0,

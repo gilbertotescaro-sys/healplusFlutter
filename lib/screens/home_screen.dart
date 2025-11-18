@@ -143,13 +143,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: Icons.psychology,
                 title: 'Análise IA',
                 color: AppTheme.accentBlue,
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Análise com IA em desenvolvimento'),
-                    ),
-                  );
-                },
+                onTap: () => context.go('/analysis'),
               ),
             ),
           ],
@@ -162,13 +156,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 icon: Icons.bar_chart,
                 title: 'Relatórios',
                 color: AppTheme.darkBlue,
-                onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Relatórios em desenvolvimento'),
-                    ),
-                  );
-                },
+                onTap: () => context.go('/reports'),
               ),
             ),
             const SizedBox(width: 12),

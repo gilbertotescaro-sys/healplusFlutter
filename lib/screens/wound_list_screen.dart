@@ -79,6 +79,11 @@ class _WoundListScreenState extends State<WoundListScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Avaliações'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.go('/home'),
+          tooltip: 'Voltar',
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),

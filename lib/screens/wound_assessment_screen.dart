@@ -220,6 +220,11 @@ class _WoundAssessmentScreenState extends State<WoundAssessmentScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.woundId != null ? 'Editar Avaliação' : 'Nova Avaliação'),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () => context.go('/home'),
+          tooltip: 'Voltar',
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.save),
@@ -480,51 +485,44 @@ class _WoundAssessmentScreenState extends State<WoundAssessmentScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          TextFormField(
-            controller: _controllers['etiology'],
+          DropdownButtonFormField<String>(
             decoration: const InputDecoration(
               labelText: 'Etiologia',
+              hintText: 'Selecione a causa...',
             ),
-          ),
-          const SizedBox(height: 16),
-          SwitchListTile(
-            title: const Text('Lesão por Pressão'),
-            value: _assessment?.pressureInjury ?? false,
+            value: _assessment?.etiology,
+            items: [
+              'Lesão por Pressão',
+              'Úlcera Venosa',
+              'Úlcera Arterial',
+              'Pé Diabético (Neuropática)',
+              'Ferida Cirúrgica',
+              'Ferida Traumática',
+              'Queimadura',
+              'Fúngica',
+            ]
+                .map((etiology) => DropdownMenuItem(
+                      value: etiology,
+                      child: Text(etiology),
+                    ))
+                .toList(),
             onChanged: (value) {
-              setState(() {
-                _assessment = _assessment?.copyWith(pressureInjury: value);
-              });
+              if (value != null) {
+                setState(() {
+                  _assessment = _assessment?.copyWith(etiology: value);
+                  _controllers['etiology']!.text = value;
+                });
+              }
             },
           ),
+          const SizedBox(height: 16),
           const SizedBox(height: 24),
           const Text(
             'Avaliação do Leito da Ferida',
             style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 16),
-          _buildTissuePercentageSlider('Granulação', _assessment?.granulationPercent ?? 0, (value) {
-            setState(() {
-              _assessment = _assessment?.copyWith(granulationPercent: value);
-            });
-          }),
-          const SizedBox(height: 16),
-          _buildTissuePercentageSlider('Epitelização', _assessment?.epithelializationPercent ?? 0, (value) {
-            setState(() {
-              _assessment = _assessment?.copyWith(epithelializationPercent: value);
-            });
-          }),
-          const SizedBox(height: 16),
-          _buildTissuePercentageSlider('Esfacelo', _assessment?.escharPercent ?? 0, (value) {
-            setState(() {
-              _assessment = _assessment?.copyWith(escharPercent: value);
-            });
-          }),
-          const SizedBox(height: 16),
-          _buildTissuePercentageSlider('Necrose Seca', _assessment?.dryNecrosisPercent ?? 0, (value) {
-            setState(() {
-              _assessment = _assessment?.copyWith(dryNecrosisPercent: value);
-            });
-          }),
+          _buildWoundBedEvaluation(),
         ],
       ),
     );
@@ -548,6 +546,248 @@ class _WoundAssessmentScreenState extends State<WoundAssessmentScreen> {
           divisions: 100,
           label: '${value.toInt()}%',
           onChanged: onChanged,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildWoundBedEvaluation() {
+    double granulation = _assessment?.granulationPercent ?? 0;
+    double epithelialization = _assessment?.epithelializationPercent ?? 0;
+    double eschar = _assessment?.escharPercent ?? 0;
+    double dryNecrosis = _assessment?.dryNecrosisPercent ?? 0;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Barra de progresso visual
+        ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Container(
+            height: 40,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          child: Row(
+            children: [
+              if (granulation > 0)
+                Expanded(
+                  flex: granulation.toInt(),
+                  child: Container(
+                    color: const Color(0xFFEF4444),
+                    child: Center(
+                      child: granulation > 10
+                          ? Text('Granulação ${granulation.toInt()}%',
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold))
+                          : null,
+                    ),
+                  ),
+                ),
+              if (epithelialization > 0)
+                Expanded(
+                  flex: epithelialization.toInt(),
+                  child: Container(
+                    color: const Color(0xFFFBCACB),
+                    child: Center(
+                      child: epithelialization > 10
+                          ? Text('Epitelização ${epithelialization.toInt()}%',
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold))
+                          : null,
+                    ),
+                  ),
+                ),
+              if (eschar > 0)
+                Expanded(
+                  flex: eschar.toInt(),
+                  child: Container(
+                    color: const Color(0xFFEACC15),
+                    child: Center(
+                      child: eschar > 10
+                          ? Text('Esfacelo ${eschar.toInt()}%',
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold))
+                          : null,
+                    ),
+                  ),
+                ),
+              if (dryNecrosis > 0)
+                Expanded(
+                  flex: dryNecrosis.toInt(),
+                  child: Container(
+                    color: const Color(0xFF1F2937),
+                    child: Center(
+                      child: dryNecrosis > 10
+                          ? Text('Necrose ${dryNecrosis.toInt()}%',
+                              style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.bold))
+                          : null,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        // Legenda
+        Wrap(
+          spacing: 16,
+          runSpacing: 8,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEF4444),
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                const Text('Granulação (25%)'),
+              ],
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFFBCACB),
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                const Text('Epitelização (25%)'),
+              ],
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEACC15),
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                const Text('Esfacelo (25%)'),
+              ],
+            ),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1F2937),
+                    borderRadius: BorderRadius.circular(3),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                const Text('Necrose (25%)'),
+              ],
+            ),
+          ],
+        ),
+        const SizedBox(height: 24),
+        // Campos de entrada
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Granulação (%)',
+                  border: OutlineInputBorder(),
+                ),
+                initialValue: granulation.toInt().toString(),
+                onChanged: (value) {
+                  setState(() {
+                    _assessment = _assessment?.copyWith(
+                      granulationPercent:
+                          double.tryParse(value) ?? 0,
+                    );
+                  });
+                },
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: TextFormField(
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Epitelização (%)',
+                  border: OutlineInputBorder(),
+                ),
+                initialValue: epithelialization.toInt().toString(),
+                onChanged: (value) {
+                  setState(() {
+                    _assessment = _assessment?.copyWith(
+                      epithelializationPercent:
+                          double.tryParse(value) ?? 0,
+                    );
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 12),
+        Row(
+          children: [
+            Expanded(
+              child: TextFormField(
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Esfacelo (%)',
+                  border: OutlineInputBorder(),
+                ),
+                initialValue: eschar.toInt().toString(),
+                onChanged: (value) {
+                  setState(() {
+                    _assessment = _assessment?.copyWith(
+                      escharPercent: double.tryParse(value) ?? 0,
+                    );
+                  });
+                },
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: TextFormField(
+                keyboardType: TextInputType.number,
+                decoration: const InputDecoration(
+                  labelText: 'Necrose Seca (%)',
+                  border: OutlineInputBorder(),
+                ),
+                initialValue: dryNecrosis.toInt().toString(),
+                onChanged: (value) {
+                  setState(() {
+                    _assessment = _assessment?.copyWith(
+                      dryNecrosisPercent: double.tryParse(value) ?? 0,
+                    );
+                  });
+                },
+              ),
+            ),
+          ],
         ),
       ],
     );
